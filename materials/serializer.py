@@ -5,20 +5,17 @@ from materials.models import Course, Lesson
 
 
 class CourseSerializer(ModelSerializer):
+    lesson_count = SerializerMethodField()
+
     class Meta:
         model = Course
         fields = "__all__"
 
-
-class CourseDetailSerializer(ModelSerializer):
-    number_of_lessons = SerializerMethodField()
-
-    def get_number_of_lessons(self, course):
-        return Course.objects.filter(lesson=course.title().count())
-
-    class Meta:
-        model = Course
-        fields = ('title', 'description', )
+    def get_lesson_count(self, object):
+        """Возвращает количество уроков в курсе"""
+        if object.lessons.count():
+            return object.lessons.count()
+        return 0
 
 
 class LessonSerializer(ModelSerializer):
