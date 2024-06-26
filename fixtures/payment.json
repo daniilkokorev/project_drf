@@ -4,10 +4,10 @@
     "pk": 1,
     "fields": {
       "user": 1,
-      "payment_date": "2024-06-11",
+      "amount": 16000.0,
+      "payment_date": "2024-06-11T00:00:00Z",
       "course": 2,
       "lesson": null,
-      "amount": 16000,
       "payment_method": "Наличные"
     }
   },
@@ -16,10 +16,10 @@
     "pk": 2,
     "fields": {
       "user": 2,
-      "payment_date": "2024-06-12",
+      "amount": 16000.0,
+      "payment_date": "2024-06-12T00:00:00Z",
       "course": 2,
       "lesson": null,
-      "amount": 16000,
       "payment_method": "Наличные"
     }
   },
@@ -28,11 +28,23 @@
     "pk": 3,
     "fields": {
       "user": 2,
-      "payment_date": "2024-07-12",
+      "amount": 5000.0,
+      "payment_date": "2024-07-12T00:00:00Z",
       "course": 2,
       "lesson": 2,
-      "amount": 5000,
       "payment_method": "Без наличный"
+    }
+  },
+  {
+    "model": "users.payment",
+    "pk": 5,
+    "fields": {
+      "user": 2,
+      "amount": 30000.0,
+      "payment_date": "2024-06-26T13:16:32.385Z",
+      "course": null,
+      "lesson": null,
+      "payment_method": "наличными"
     }
   }
 ]
