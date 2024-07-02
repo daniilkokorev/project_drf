@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from materials.models import Course, Lesson, Subscriptions
+from materials.paginetions import CustomPagination
 from materials.serializer import CourseSerializer, LessonSerializer, SubscriptionsSerializer
 from users.permissions import Moderator, IsOwner
 
@@ -18,6 +19,7 @@ class CourseViewSet(ModelViewSet):
     """
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
+    pagination_class = CustomPagination
 
     def perform_create(self, serializer):
         course = serializer.save()
@@ -60,6 +62,7 @@ class LessonListApiView(ListAPIView):
     """
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
+    pagination_class = CustomPagination
 
 
 class LessonRetrieveApiView(RetrieveAPIView):
