@@ -1,9 +1,12 @@
-from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveAPIView, DestroyAPIView, UpdateAPIView
+from rest_framework import status
+from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveAPIView, DestroyAPIView, UpdateAPIView, \
+    get_object_or_404
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
-from materials.models import Course, Lesson
-from materials.serializer import CourseSerializer, LessonSerializer
+from materials.models import Course, Lesson, Subscriptions
+from materials.serializer import CourseSerializer, LessonSerializer, SubscriptionsSerializer
 from users.permissions import Moderator, IsOwner
 
 
@@ -83,3 +86,25 @@ class LessonDestroyAPIView(DestroyAPIView):
     """
     queryset = Lesson.objects.all()
     permission_classes = (~Moderator | IsOwner, IsAuthenticated)
+
+
+class SubscriptionsViewSet(ModelViewSet):
+    """
+    API endpoint для управления подписками.
+    """
+    queryset = Subscriptions.objects.all()
+    serializer_class = SubscriptionsSerializer
+
+    def post(self, *args, **kwargs):
+        user = self.request.user
+        course_id = self.request.data.get('course')
+        course = get_object_or_404(Course, pk=course_id)
+
+        subscription, created = Subscriptions.objects.get_or_create(user=user, course=course)
+        if not created:
+            subscription.delete()
+            message = "Подписка удалена"
+        else:
+            message = "Подписка создана"
+
+        return Response({'message': message}, status=status.HTTP_201_CREATED)
