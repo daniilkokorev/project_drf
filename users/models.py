@@ -12,10 +12,10 @@ class User(AbstractUser):
     """Модель пользователя"""
 
     name = None
-    email = models.EmailField(verbose_name="Email", unique=True,)
-    phone = models.CharField(verbose_name="Телефон", max_length=35, **NULLABLE)
-    city = models.CharField(verbose_name="Город", max_length=35, **NULLABLE)
-    avatar = models.ImageField(upload_to="users/media", verbose_name="Аватар", **NULLABLE,)
+    email = models.EmailField(verbose_name="email", unique=True,)
+    phone = models.CharField(verbose_name="phone", max_length=35, **NULLABLE)
+    city = models.CharField(verbose_name="city", max_length=35, **NULLABLE)
+    avatar = models.ImageField(upload_to="users/media", verbose_name="avatar", **NULLABLE,)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
