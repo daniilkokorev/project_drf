@@ -1,3 +1,4 @@
+from rest_framework import serializers
 from rest_framework.fields import SerializerMethodField
 from rest_framework.serializers import ModelSerializer
 
@@ -21,6 +22,7 @@ class CourseSerializer(ModelSerializer):
     """
     lesson_count = SerializerMethodField()
     lesson = LessonSerializer(source='lesson_set', many=True, read_only=True)
+    subscription = serializers.SerializerMethodField()
 
     class Meta:
         model = Course
@@ -31,6 +33,13 @@ class CourseSerializer(ModelSerializer):
         if object.lessons.count():
             return object.lessons.count()
         return 0
+
+    def get_subscription(self, instance):
+        request = self.context.get('request')
+        user = None
+        if request:
+            user = request.user
+        return instance.subscription_set.filter(user=user).exists()
 
 
 class SubscriptionsSerializer(ModelSerializer):

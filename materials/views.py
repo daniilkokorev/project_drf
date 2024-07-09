@@ -1,4 +1,3 @@
-from rest_framework import status
 from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveAPIView, DestroyAPIView, UpdateAPIView, \
     get_object_or_404
 from rest_framework.permissions import IsAuthenticated
@@ -6,7 +5,17 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from materials.models import Course, Lesson, Subscriptions
-from materials.paginetions import CustomPagination
+from materials.paginations import CustomPagination
+from materials.serializer import CourseSerializer, LessonSerializer, SubscriptionsSerializer
+from users.permissions import Moderator, IsOwner
+from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveAPIView, DestroyAPIView, UpdateAPIView, \
+    get_object_or_404
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.viewsets import ModelViewSet
+
+from materials.models import Course, Lesson, Subscriptions
+from materials.paginations import CustomPagination
 from materials.serializer import CourseSerializer, LessonSerializer, SubscriptionsSerializer
 from users.permissions import Moderator, IsOwner
 
@@ -95,19 +104,19 @@ class SubscriptionsViewSet(ModelViewSet):
     """
     API endpoint для управления подписками.
     """
-    queryset = Subscriptions.objects.all()
     serializer_class = SubscriptionsSerializer
 
     def post(self, *args, **kwargs):
         user = self.request.user
         course_id = self.request.data.get('course')
-        course = get_object_or_404(Course, pk=course_id)
+        course_item = get_object_or_404(Course, pk=course_id)
 
-        subscription, created = Subscriptions.objects.get_or_create(user=user, course=course)
+        subscription, created = Subscriptions.objects.get_or_create(user=user, course=course_item)
         if not created:
             subscription.delete()
-            message = "Подписка удалена"
+            message = 'Подписка удалена'
         else:
-            message = "Подписка создана"
+            message = 'Подписка добавлена'
+        return Response({"message": message})
 
-        return Response({'message': message}, status=status.HTTP_201_CREATED)
+
