@@ -35,6 +35,9 @@ class CourseSerializer(ModelSerializer):
         return 0
 
     def get_subscription(self, instance):
+        """
+        Проверяет подписку на курс
+        """
         request = self.context.get('request')
         user = None
         if request:

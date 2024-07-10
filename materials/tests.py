@@ -20,6 +20,9 @@ class LessonTestCase(APITestCase):
                                                  url="https://example.com/lesson")
 
     def test_lesson_retrieve(self):
+        """
+        Тест получения урока
+        """
         url = reverse("materials:lesson_retrieve", args=(self.lesson.pk,))
         response = self.client.get(url)
         data = response.json()
@@ -32,6 +35,9 @@ class LessonTestCase(APITestCase):
         self.assertEqual(data.get("url"), self.lesson.url)
 
     def test_lesson_create(self):
+        """
+        Тест создания урока
+        """
         url = reverse("materials:lesson_create")
         data = {
             "title": "New Test Lesson",
@@ -51,6 +57,9 @@ class LessonTestCase(APITestCase):
         self.assertEqual(data.get("url"), "https://www.youtube.com/watch")
 
     def test_lesson_update(self):
+        """
+        Тест изменения урока
+        """
         url = reverse("materials:lesson_update", args=(self.lesson.pk,))
         data = {
             "title": "Updated Test Lesson",
@@ -70,12 +79,18 @@ class LessonTestCase(APITestCase):
         self.assertEqual(data.get("url"), "https://www.youtube.com/watch")
 
     def test_lesson_delete(self):
+        """
+        Тест удаления урока
+        """
         url = reverse("materials:lesson_delete", args=(self.lesson.pk,))
         response = self.client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Lesson.objects.all().count(), 0)
 
     def test_lesson_list(self):
+        """
+        Тест получения списка уроков
+        """
         url = reverse("materials:lesson_list")
         data = {
             "title": "New Test Lesson",

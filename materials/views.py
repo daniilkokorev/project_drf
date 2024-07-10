@@ -60,6 +60,9 @@ class LessonCreateApiView(CreateAPIView):
     permission_classes = (~Moderator, IsAuthenticated)
 
     def perform_create(self, serializer):
+        """
+        Присваивает созданному уроку текущего пользователя.
+        """
         lesson = serializer.save()
         lesson.owner = self.request.user
         lesson.save()
@@ -107,6 +110,9 @@ class SubscriptionsViewSet(ModelViewSet):
     serializer_class = SubscriptionsSerializer
 
     def post(self, *args, **kwargs):
+        """
+        Проверка наличия курса и создание или удаление подписки.
+        """
         user = self.request.user
         course_id = self.request.data.get('course')
         course_item = get_object_or_404(Course, pk=course_id)
