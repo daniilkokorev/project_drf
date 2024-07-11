@@ -42,7 +42,7 @@ class CourseSerializer(ModelSerializer):
         user = None
         if request:
             user = request.user
-        return instance.subscription_set.filter(user=user).exists()
+        return instance.subscriptions_set.filter(user=user).exists()
 
 
 class SubscriptionsSerializer(ModelSerializer):

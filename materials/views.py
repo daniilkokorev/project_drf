@@ -8,16 +8,7 @@ from materials.models import Course, Lesson, Subscriptions
 from materials.paginations import CustomPagination
 from materials.serializer import CourseSerializer, LessonSerializer, SubscriptionsSerializer
 from users.permissions import Moderator, IsOwner
-from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveAPIView, DestroyAPIView, UpdateAPIView, \
-    get_object_or_404
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
-from rest_framework.viewsets import ModelViewSet
-
-from materials.models import Course, Lesson, Subscriptions
-from materials.paginations import CustomPagination
-from materials.serializer import CourseSerializer, LessonSerializer, SubscriptionsSerializer
-from users.permissions import Moderator, IsOwner
+from materials.tasks import course_update_message
 
 
 # Create your views here.
@@ -49,6 +40,15 @@ class CourseViewSet(ModelViewSet):
         elif self.action == 'destroy':
             self.permission_classes = (~Moderator | IsOwner,)
         return super().get_permissions()
+
+    def perform_update(self, serializer):
+        """
+        Обновляет курс и отправляет сообщение о его изменении в очередь Celery.
+        """
+        serializer.save()
+        course = serializer.save()
+        course_id = course.id
+        course_update_message.delay(course_id)
 
 
 class LessonCreateApiView(CreateAPIView):
